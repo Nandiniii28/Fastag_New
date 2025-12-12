@@ -299,11 +299,12 @@ export default function Page() {
     const router = useRouter();
 
 
-    useEffect(() => {
-        if (!loading && !user) {
-            router.push("/login");
-        }
-    }, [loading, user]);
+    // useEffect(() => {
+    //     const token= localStorage.getItem("token")
+    //     if (!token) {
+    //         router.push("/login");
+    //     }
+    // }, []);
 
     if (loading) return <p className="p-10">Loading...</p>;
 
