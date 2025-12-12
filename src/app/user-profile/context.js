@@ -9,7 +9,7 @@
 //     const [user, setUser] = useState(null);
 //     const [loading, setLoading] = useState(true);
 //     const router = useRouter();
-    
+
 
 //     const fetchProfile = async () => {
 //         try {
@@ -58,21 +58,32 @@ export function UserProvider({ children }) {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    
+
     const fetchProfile = async () => {
         try {
             const token = localStorage.getItem("token");
-           const usersData = JSON.parse(localStorage.getItem("user"));
+            //    const usersData = JSON.parse(localStorage.getItem("user"));
 
-            console.log("user data   ==== =",usersData._id)
-            if (!token) {
-                // router.push("/login");
+            //     console.log("user data   ==== =",usersData._id)
+            //     if (!token) {
+            //         // router.push("/login");
+            //         setLoading(false);
+            //         return;
+            //     }
+
+
+            const usersData = JSON.parse(localStorage.getItem("user"));
+
+            if (!token || !usersData || !usersData._id) {
                 setLoading(false);
                 return;
             }
-            
+
+            console.log("User ID:", usersData._id);
+
+
             const res = await axiosInstance.get(`/auth/${usersData._id}`);
-            
+
             if (res.data.success) {
                 setUser(res.data.data || res.data.user);
                 // Update localStorage user data
