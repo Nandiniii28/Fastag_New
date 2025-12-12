@@ -913,7 +913,7 @@ export default function FastagForm({ categoryKey }) {
                                 </div> */}
                             </div>
                             <div className="rounded-lg">
-                                <div className="flex justify-between items-center">
+                                <div className="lg:flex space-y-2 justify-between items-center">
                                     <div>
                                         <p className="font-medium text-gray-500 text-sm">Amount Due</p>
                                         <input
@@ -934,7 +934,7 @@ export default function FastagForm({ categoryKey }) {
 
                                 </div>
                             </div>
-                            <div className="text-xs text-gray-500 flex justify-between">
+                            <div className="text-xs text-gray-500 flex flex-col lg:flex-row  justify-between">
                                 <p>Reference ID: <span className="font-mono">{enquiryReferenceId}</span></p>
                                 <p>External Ref: <span className="font-mono">{externalRef}</span></p>
                             </div>

@@ -50,7 +50,7 @@ export default function FastagTimeline() {
       </div>
 
       {/* Timeline */}
-      <div className="relative border-l-4 border-[#0060c9]/20 ml-6 md:ml-0 md:border-l-0 md:grid md:grid-cols-4 md:gap-10">
+      <div className="relative  ml-6 md:ml-0 md:border-l-0 md:grid md:grid-cols-4 md:gap-10">
         {steps.map((step, index) => (
           <motion.div
             key={index}
@@ -62,7 +62,7 @@ export default function FastagTimeline() {
           >
         
             <div className="
-              absolute -left-7 top-1 z-10 md:static md:mx-auto 
+              absolute -left-12 top-1 z-10 md:static md:mx-auto 
               w-12 h-12 flex items-center justify-center
               rounded-full bg-linear-to-br from-[#0060c9]/10 to-[#ff6f00]/10 border
               border-[#0060c9]/20 shadow-md
