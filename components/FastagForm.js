@@ -10,17 +10,17 @@ import { toast, ToastContainer } from "react-toastify";
 const API_BASE_URL = "http://localhost:5000/api/instantpay";
 
 export default function FastagForm({ categoryKey }) {
-    // const router = useRouter();
+    const router = useRouter();
 
-    // const [tokan, settoken] = useState()
-    // useEffect(() => {
-    //     const tokenn = localStorage.getItem("token")
-    //     if (tokenn) {
-    //         settoken(tokenn)
-    //     } else {
-    //         router.push("login")
-    //     }
-    // }, [])
+    const [tokan, settoken] = useState()
+    useEffect(() => {
+        const tokenn = localStorage.getItem("token")
+        if (tokenn) {
+            settoken(tokenn)
+        } else {
+            router.push("login")
+        }
+    }, [])
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [fetchingBill, setFetchingBill] = useState(false);

@@ -52,6 +52,7 @@ export default function Footer() {
                   { label: "Home", href: "/" },
                   { label: "FASTag", href: "/fastag" },
                   { label: "E-Challan", href: "/echallan" },
+                   { label: "Blog", href: "/blog" },
                 ].map((item, i) => (
                   <li key={i}>
                     <Link
