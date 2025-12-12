@@ -463,7 +463,7 @@ export default function FastagForm({ categoryKey }) {
     const handlePayBill = async () => {
         try {
             if (billAmount < 100) {
-                toast.info("minimum 100 Rs is required")
+                toast.info("minimum amount 100 is required")
                 return
             }
 
@@ -498,7 +498,6 @@ export default function FastagForm({ categoryKey }) {
                     billerId: biller,
                     enquiryReferenceId,
                     inputParameters: inputFields,
-                    type,
                     initChannel,
                     email: "niranjan@7unique.in"
                 })
@@ -512,9 +511,9 @@ export default function FastagForm({ categoryKey }) {
             } else {
                 Swal.fire({
                     title: "alright!",
-                    text: data.message || "try after some time",
+                    text: data.message || "try after some times",
                     icon: "warning",
-                    confirmButtonText: "Ohk",
+                    confirmButtonText: "Ok",
                 })
             }
 
@@ -524,7 +523,7 @@ export default function FastagForm({ categoryKey }) {
                 title: "alright!",
                 text: err.response?.data?.message || "try after some time",
                 icon: "warning",
-                confirmButtonText: "Ohk",
+                confirmButtonText: "Ok",
             })
         }
     };
@@ -771,10 +770,10 @@ export default function FastagForm({ categoryKey }) {
     };
 
     return (
-        <section className="py-5 px-4 md:px-0 max-w-7xl mx-auto">
+        <section className="py-0 px-4 md:px-0 max-w-7xl mx-auto">
             <ToastContainer position="top-center" />
-            <div className="grid md:grid-cols-2">
-                <div className="">
+            <div className="grid md:grid-cols-1">
+                {/* <div className="">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight pb">
                         Get your <br />
                         <span className="text-[#00186b] ">FASTag Bill </span>
@@ -786,8 +785,8 @@ export default function FastagForm({ categoryKey }) {
                         height={600}
                         alt="FASTag bill payment"
                     />
-                </div>
-                <div className="mt-10 p-6 bg-white rounded-2xl shadow-md h-fit relative">
+                </div> */}
+                <div className=" p-6 bg-white rounded-2xl shadow-md h-fit relative">
                     {loading ? (
                         <div className="flex justify-center items-center h-40">
                             <FaSpinner className="animate-spin text-4xl text-gray-600" />
