@@ -5,28 +5,39 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaCar, FaMoneyBillWave, FaTimes, FaSpinner, FaInfoCircle, FaCreditCard } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
+import Swal from "sweetalert2";
 
 // API base URL
 const API_BASE_URL = "http://localhost:5000/api/instantpay";
 
 export default function FastagForm({ categoryKey }) {
     const router = useRouter();
+    const [user, setUser] = useState(null);
+    console.log(user)
+
 
     const [tokan, settoken] = useState()
     useEffect(() => {
         const tokenn = localStorage.getItem("token")
         if (tokenn) {
             settoken(tokenn)
-        } else {
-            router.push("login")
         }
     }, [])
+
+    useEffect(() => {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
+
     const [providers, setProviders] = useState([]);
     const [loading, setLoading] = useState(false);
     const [fetchingBill, setFetchingBill] = useState(false);
     const [processingPayment, setProcessingPayment] = useState(false);
 
     const [provider, setProvider] = useState("");
+    console.log(provider)
     const [billerInfo, setBillerInfo] = useState(null);
     const [submitted, setSubmitted] = useState(false);
     const [billAmount, setBillAmount] = useState(0);
@@ -35,6 +46,7 @@ export default function FastagForm({ categoryKey }) {
 
     // New state for API responses
     const [customerName, setCustomerName] = useState("");
+    const [customerWallet, setCustomerWallet] = useState("");
     const [billNumber, setBillNumber] = useState("");
     const [enquiryReferenceId, setEnquiryReferenceId] = useState("");
     const [externalRef, setExternalRef] = useState("");
@@ -90,6 +102,7 @@ export default function FastagForm({ categoryKey }) {
                     biller => biller.billerStatus === "ACTIVE" && biller.isAvailable
                 );
                 setProviders(activeBillers);
+
             }
         } catch (error) {
             console.error("Error fetching billers:", error);
@@ -417,7 +430,7 @@ export default function FastagForm({ categoryKey }) {
                         foundBillNumber = enquiryData[field];
                     }
                 });
-
+                setCustomerWallet(data?.data?.data?.AdditionalDetails[1]?.Value || "N/A")
                 setCustomerName(foundName);
                 setBillNumber(foundBillNumber);
                 setBillAmount(foundAmount);
@@ -437,9 +450,61 @@ export default function FastagForm({ categoryKey }) {
         }
     };
 
-    const handlePayBill = () => {
-        setShowPaymentForm(true);
+    const handlePayBill = async () => {
+        try {
+            if (billAmount < 100) {
+                toast.info("minimum 100 Rs is required")
+                return
+            }
+            if (!tokan) {
+                Swal.fire({
+                    title: "Verify Required",
+                    text: "Please Verify mobile number to continue.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Verify Now",
+                    cancelButtonText: "Cancel",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        router.push("/login");
+                    }
+                });
+
+                return; 
+            }
+
+            const biller = providers.find(p => p.billerId == provider);
+
+            const res = await fetch(`${API_BASE_URL}/start-fastag-payment`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    userId: user._id,
+                    amount: billAmount,
+                    billerId: biller,
+                    enquiryReferenceId,
+                    inputParameters: inputFields,
+                    initChannel,
+                    email: "niranjan@7unique.in"
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                window.location.href = data.redirectURL; // Auto redirect to gateway
+            } else {
+                toast.error(data.message);
+            }
+
+        } catch (err) {
+            console.log(err);
+            toast.error("Something went wrong");
+        }
     };
+
 
     // Handle payment info changes dynamically
     const handlePaymentInfoChange = (infoName, value) => {
@@ -449,103 +514,103 @@ export default function FastagForm({ categoryKey }) {
         }));
     };
 
-    const handlePaymentSubmit = async (e) => {
-        e.preventDefault();
+    // const handlePaymentSubmit = async (e) => {
+    //     e.preventDefault();
 
-        if (!selectedBiller || !enquiryReferenceId || !externalRef) {
-            alert("Missing payment information. Please generate bill again.");
-            return;
-        }
+    //     if (!selectedBiller || !enquiryReferenceId || !externalRef) {
+    //         alert("Missing payment information. Please generate bill again.");
+    //         return;
+    //     }
 
-        // Validate transaction amount
-        if (!transactionAmount || transactionAmount <= 0) {
-            alert("Please enter a valid transaction amount");
-            return;
-        }
+    //     // Validate transaction amount
+    //     if (!transactionAmount || transactionAmount <= 0) {
+    //         alert("Please enter a valid transaction amount");
+    //         return;
+    //     }
 
-        // Check amount based on biller's payment amount exactness
-        if (billerDetails?.paymentAmountExactness === "EXACT") {
-            if (parseFloat(transactionAmount) !== parseFloat(billAmount)) {
-                alert(`Exact amount of ₹${billAmount} is required for this biller.`);
-                return;
-            }
-        } else if (billerDetails?.paymentAmountExactness === "EXACT_UP") {
-            if (parseFloat(transactionAmount) < parseFloat(billAmount)) {
-                if (!confirm(`The amount entered (₹${transactionAmount}) is less than the bill amount (₹${billAmount}). Do you want to continue?`)) {
-                    return;
-                }
-            }
-        }
+    //     // Check amount based on biller's payment amount exactness
+    //     if (billerDetails?.paymentAmountExactness === "EXACT") {
+    //         if (parseFloat(transactionAmount) !== parseFloat(billAmount)) {
+    //             alert(`Exact amount of ₹${billAmount} is required for this biller.`);
+    //             return;
+    //         }
+    //     } else if (billerDetails?.paymentAmountExactness === "EXACT_UP") {
+    //         if (parseFloat(transactionAmount) < parseFloat(billAmount)) {
+    //             if (!confirm(`The amount entered (₹${transactionAmount}) is less than the bill amount (₹${billAmount}). Do you want to continue?`)) {
+    //                 return;
+    //             }
+    //         }
+    //     }
 
-        setProcessingPayment(true);
+    //     setProcessingPayment(true);
 
-        try {
-            // Get payment mode details dynamically
-            const selectedPaymentMode = paymentModes.find(mode => mode.name === paymentMode);
+    //     try {
+    //         // Get payment mode details dynamically
+    //         const selectedPaymentMode = paymentModes.find(mode => mode.name === paymentMode);
 
-            // Get device info dynamically
-            const deviceInfo = getDynamicDeviceInfo(initChannel);
+    //         // Get device info dynamically
+    //         const deviceInfo = getDynamicDeviceInfo(initChannel);
 
-            // Prepare payment info dynamically
-            const paymentModeInfo = {};
-            if (selectedPaymentMode && selectedPaymentMode.paymentInfo) {
-                selectedPaymentMode.paymentInfo.forEach(info => {
-                    paymentModeInfo[info.name] = paymentInfo[info.name] || "";
-                });
-            }
+    //         // Prepare payment info dynamically
+    //         const paymentModeInfo = {};
+    //         if (selectedPaymentMode && selectedPaymentMode.paymentInfo) {
+    //             selectedPaymentMode.paymentInfo.forEach(info => {
+    //                 paymentModeInfo[info.name] = paymentInfo[info.name] || "";
+    //             });
+    //         }
 
-            // Build payment payload dynamically
-            const paymentPayload = {
-                billerId: selectedBiller,
-                externalRef: externalRef,
+    //         // Build payment payload dynamically
+    //         const paymentPayload = {
+    //             billerId: selectedBiller,
+    //             externalRef: externalRef,
 
-                enquiryReferenceId: enquiryReferenceId,
-                // Include all input parameters dynamically
-                inputParameters: {
-                    ...Object.keys(inputFields).reduce((acc, key) => {
-                        if (inputFields[key]) {
-                            acc[key] = inputFields[key];
-                        }
-                        return acc;
-                    }, {})
-                },
-                transactionAmount: parseFloat(transactionAmount),
-                paymentMode: paymentMode,
-                initChannel: initChannel,
-                ...deviceInfo,
-                ...paymentModeInfo,
-                mpin: "111111",
-                category: billerDetails?.category?.name
-            };
+    //             enquiryReferenceId: enquiryReferenceId,
+    //             // Include all input parameters dynamically
+    //             inputParameters: {
+    //                 ...Object.keys(inputFields).reduce((acc, key) => {
+    //                     if (inputFields[key]) {
+    //                         acc[key] = inputFields[key];
+    //                     }
+    //                     return acc;
+    //                 }, {})
+    //             },
+    //             transactionAmount: parseFloat(transactionAmount),
+    //             paymentMode: paymentMode,
+    //             initChannel: initChannel,
+    //             ...deviceInfo,
+    //             ...paymentModeInfo,
+    //             mpin: "111111",
+    //             category: billerDetails?.category?.name
+    //         };
 
-            console.log("Payment Payload:", paymentPayload);
+    //         console.log("Payment Payload:", paymentPayload);
 
-            const response = await fetch(`${API_BASE_URL}/payment`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${tokan}`,
-                },
-                body: JSON.stringify(paymentPayload),
-            });
+    //         const response = await fetch(`${API_BASE_URL}/payment`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 "Authorization": `Bearer ${tokan}`,
+    //             },
+    //             body: JSON.stringify(paymentPayload),
+    //         });
 
-            const data = await response.json();
-            console.log("Payment response:", data);
+    //         const data = await response.json();
+    //         console.log("Payment response:", data);
 
-            if (data.success && data.data.statuscode === "TXN") {
-                setShowPaymentForm(false);
-                setShowModal(true);
-            } else {
-                const errorMessage = data.message || "Payment failed. Please try again.";
-                toast.error(errorMessage);
-            }
-        } catch (error) {
-            console.error("Error processing payment:", error);
-            alert("Payment processing error. Please try again.");
-        } finally {
-            setProcessingPayment(false);
-        }
-    };
+    //         if (data.success && data.data.statuscode === "TXN") {
+    //             setShowPaymentForm(false);
+    //             setShowModal(true);
+    //         } else {
+    //             const errorMessage = data.message || "Payment failed. Please try again.";
+    //             toast.error(errorMessage);
+    //         }
+    //     } catch (error) {
+    //         console.error("Error processing payment:", error);
+    //         alert("Payment processing error. Please try again.");
+    //     } finally {
+    //         setProcessingPayment(false);
+    //     }
+    // };
 
     const closeModal = () => {
         setShowModal(false);
@@ -682,7 +747,7 @@ export default function FastagForm({ categoryKey }) {
     };
 
     return (
-        <section className="py-5 px-4 md:px-0 max-w-6xl mx-auto">
+        <section className="py-5 px-4 md:px-0 max-w-7xl mx-auto">
             <ToastContainer position="top-center" />
             <div className="grid md:grid-cols-2">
                 <div className="">
@@ -691,8 +756,8 @@ export default function FastagForm({ categoryKey }) {
                         <span className="text-[#00186b] ">FASTag Bill </span>
                     </h2>
                     <Image
-                        className="rounded-xl shadow-xl md:mt-8"
-                        src="/image/billpay.jpg"
+                        className=""
+                        src="/user/bill.jpg"
                         width={500}
                         height={600}
                         alt="FASTag bill payment"
@@ -755,30 +820,6 @@ export default function FastagForm({ categoryKey }) {
                                     )}
                                 </div>
                             )}
-
-                            {/* Provider Info - Dynamic */}
-                            {/* {billerDetails && (
-                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                                    <p className="text-sm text-blue-700">
-                                        <span className="font-medium">Provider:</span> {billerDetails.billerInfo?.name || selectedBiller?.billerName}
-                                        {billerDetails.paymentAmountExactness === "EXACT" && (
-                                            <span className="ml-2 text-green-600">• Exact amount required</span>
-                                        )}
-                                        {billerDetails.paymentAmountExactness === "EXACT_UP" && (
-                                            <span className="ml-2 text-amber-600">• Exact or higher amount accepted</span>
-                                        )}
-                                    </p>
-                                    {billerDetails.fetchRequirement === "MANDATORY" && (
-                                        <p className="text-xs text-blue-600 mt-1">
-                                            Bill fetch is mandatory for this provider
-                                        </p>
-                                    )}
-                                    <p className="text-xs text-gray-600 mt-1">
-                                        Parameters: {billerParams.length} • Modes: {paymentModes.length} • Channels: {initChannels.length}
-                                    </p>
-                                </div>
-                            )} */}
-
                             {/* Buttons */}
                             <div className="flex gap-3">
                                 {!submitted ? (
@@ -840,15 +881,25 @@ export default function FastagForm({ categoryKey }) {
                                     <p className="font-semibold">{customerName}</p>
                                 </div>
                                 <div>
+                                    <p className="font-medium text-gray-500 text-sm">Wallet Balance</p>
+                                    <p className="font-semibold">{customerWallet}</p>
+                                </div>
+                                {/* <div>
                                     <p className="font-medium text-gray-500 text-sm">Bill Number</p>
                                     <p className="font-semibold text-sm">{billNumber}</p>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="bg-white p-4 rounded-lg border">
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <p className="font-medium text-gray-500 text-sm">Amount Due</p>
-                                        <p className="text-2xl font-bold text-gray-800">₹{billAmount}</p>
+                                        <input
+                                            value={billAmount}
+                                            onChange={(e) => setBillAmount(e.target.value)}
+                                            placeholder="enter amount"
+                                            className="text-1xl font-bold text-gray-800 p-2 border border-1 rounded-md"
+                                        />
+                                        {/* <p className="text-2xl font-bold text-gray-800">₹{billAmount}</p> */}
                                     </div>
                                     <button
                                         onClick={handlePayBill}
@@ -857,165 +908,12 @@ export default function FastagForm({ categoryKey }) {
                                         <FaCreditCard />
                                         Pay Bill
                                     </button>
+
                                 </div>
                             </div>
                             <div className="text-xs text-gray-500">
                                 <p>Reference ID: <span className="font-mono">{enquiryReferenceId}</span></p>
                                 <p>External Ref: <span className="font-mono">{externalRef}</span></p>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Payment Form Modal - Dynamic */}
-                    {showPaymentForm && (
-                        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-                            <div className="bg-white rounded-xl shadow-lg p-6 max-w-md w-full relative">
-                                <button
-                                    onClick={() => setShowPaymentForm(false)}
-                                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-                                >
-                                    <FaTimes />
-                                </button>
-
-                                <h3 className="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                                    <FaCreditCard /> Complete Payment
-                                </h3>
-
-                                <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                                    {/* Dynamic Bill Summary */}
-                                    <div className="bg-blue-50 p-4 rounded-lg">
-                                        <h4 className="font-semibold text-gray-700 mb-2">Bill Summary</h4>
-                                        <div className="space-y-1 text-sm">
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Provider:</span>
-                                                <span className="font-medium">{selectedBiller?.billerName}</span>
-                                            </div>
-                                            {Object.keys(inputFields).map(fieldName => {
-                                                const config = billerInputConfig[fieldName];
-                                                const value = inputFields[fieldName];
-                                                if (!value || !config) return null;
-
-                                                return (
-                                                    <div key={fieldName} className="flex justify-between">
-                                                        <span className="text-gray-600">{config.desc}:</span>
-                                                        <span className="font-medium">{value}</span>
-                                                    </div>
-                                                );
-                                            })}
-                                            <div className="flex justify-between">
-                                                <span className="text-gray-600">Bill Amount:</span>
-                                                <span className="font-bold">₹{billAmount}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Transaction Amount */}
-                                    <div>
-                                        <label className="block text-gray-700 font-medium mb-1">
-                                            Transaction Amount *
-                                        </label>
-                                        <div className="relative">
-                                            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">₹</span>
-                                            <input
-                                                type="number"
-                                                value={transactionAmount}
-                                                onChange={(e) => setTransactionAmount(e.target.value)}
-                                                min={billerDetails?.paymentAmountExactness === "EXACT" ? billAmount : 1}
-                                                step="0.01"
-                                                placeholder="Enter amount"
-                                                className="w-full border border-gray-300 rounded-lg p-2 pl-8 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                required
-                                            />
-                                        </div>
-                                        {billerDetails?.paymentAmountExactness === "EXACT" && (
-                                            <p className="text-sm text-amber-600 mt-1">
-                                                Exact amount of ₹{billAmount} is required
-                                            </p>
-                                        )}
-                                        {billerDetails?.paymentAmountExactness === "EXACT_UP" && parseFloat(transactionAmount) < parseFloat(billAmount) && (
-                                            <p className="text-sm text-amber-600 mt-1">
-                                                Amount is less than bill amount (₹{billAmount})
-                                            </p>
-                                        )}
-                                    </div>
-
-                                    {/* Dynamic Payment Mode Selection */}
-                                    {/* <div>
-                                        <label className="block text-gray-700 font-medium mb-1">
-                                            Payment Mode *
-                                        </label>
-                                        <select
-                                            value={paymentMode}
-                                            onChange={(e) => setPaymentMode(e.target.value)}
-                                            className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            required
-                                        >
-                                            {paymentModes.map((mode) => (
-                                                <option key={mode.name} value={mode.name}>
-                                                    {mode.desc} (₹{mode.minAmount} - ₹{mode.maxAmount})
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div> */}
-
-                                    {/* Dynamic Payment Info Fields */}
-                                    {paymentModes.map((mode) => {
-                                        if (mode.name === paymentMode && mode.paymentInfo) {
-                                            return mode.paymentInfo.map((info) => (
-                                                <div key={info.name}>
-                                                    <label className="block text-gray-700 font-medium mb-1">
-                                                        {info.desc}
-                                                        {info.required && <span className="text-red-500 ml-1">*</span>}
-                                                    </label>
-                                                    <input
-                                                        type={getInputType(info.inputType)}
-                                                        value={paymentInfo[info.name] || ""}
-                                                        onChange={(e) => handlePaymentInfoChange(info.name, e.target.value)}
-                                                        placeholder={`Enter ${info.desc.toLowerCase()}`}
-                                                        minLength={info.minLength}
-                                                        maxLength={info.maxLength}
-                                                        pattern={info.regex && info.regex !== "^.*$" ? info.regex : undefined}
-                                                        className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                    />
-                                                    <p className="text-xs text-gray-500 mt-1">
-                                                        Length: {info.minLength}-{info.maxLength} chars
-                                                        {info.regex && info.regex !== "^.*$" && (
-                                                            <span> • Pattern: {formatRegexForDisplay(info.regex)}</span>
-                                                        )}
-                                                    </p>
-                                                </div>
-                                            ));
-                                        }
-                                        return null;
-                                    })}
-
-                                    {/* Payment Buttons */}
-                                    <div className="flex gap-3 pt-4">
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPaymentForm(false)}
-                                            className="flex-1 py-3 rounded-lg font-medium border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
-                                        >
-                                            Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            disabled={processingPayment}
-                                            className="flex-1 py-3 rounded-lg font-medium bg-green-600 text-white hover:bg-green-700 transition flex justify-center items-center gap-2"
-                                        >
-                                            {processingPayment ? (
-                                                <>
-                                                    <FaSpinner className="animate-spin" />
-                                                    Processing...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    Pay ₹{transactionAmount || billAmount}
-                                                </>
-                                            )}
-                                        </button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
                     )}

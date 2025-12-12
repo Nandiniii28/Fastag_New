@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 // Swapped to Ionicon style for a sleeker look
-import { IoWalletOutline, IoMenu, IoClose, IoChevronDown } from "react-icons/io5"; 
+import { IoWalletOutline, IoMenu, IoClose, IoChevronDown } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Swal from "sweetalert2";
@@ -12,12 +12,12 @@ import axiosInstance from "../axiosInstance";
 
 export default function Header() {
   const { user } = useUser();
-  
+
   const [open, setOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [amount, setAmount] = useState("");
-  const [method, setMethod] = useState("upi"); 
+  const [method, setMethod] = useState("upi");
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
   const [email, setemail] = useState("");
@@ -37,7 +37,7 @@ export default function Header() {
       // Use toLocaleString for clean, currency-formatted balance display
       setwalletBalance(user?.wallet?.balance || 0);
     }
-  }, [user]); 
+  }, [user]);
 
   const handleAddFunds = async (e) => {
     e.preventDefault();
@@ -137,12 +137,12 @@ export default function Header() {
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3">
-              <Image 
-                src={"/fastpaysave.png"} 
-                alt="fastpaysave" 
-                width={140} 
-                height={30} 
-                className="w-28 h-auto" 
+              <Image
+                src={"/fastpaysave.png"}
+                alt="fastpaysave"
+                width={140}
+                height={30}
+                className="w-28 h-auto"
               />
             </Link>
 
@@ -157,7 +157,7 @@ export default function Header() {
                   {link.name}
                 </Link>
               ))}
-              
+
               {token &&
                 <Link
                   href="/user-profile"
@@ -175,89 +175,29 @@ export default function Header() {
                   >
                     Login
                   </Link>
-                  {/* <Link
-                    href="/register"
-                    className="px-5 py-2 rounded-full bg-yellow-450 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white hover:brightness-95 transition-all font-semibold text-sm shadow-md"
-                  >
-                    Register
-                  </Link> */}
                 </div>
               )}
             </div>
 
-     
+
           </div>
-                 {/* Wallet + Mobile button */}
-            <div className="flex items-center gap-4">
-              {
-                token &&
-                <>
-                  {/* Wallet Dropdown - Sleek Button */}
-                  <div className="relative">
-                    <button
-                      onClick={() => setWalletOpen((v) => !v)}
-                      className="flex items-center space-x-2 px-4 py-2 bg-black border border-gray-200 rounded-full text-gray-800 hover:bg-gray-50 transition-all shadow-sm min-w-[140px] justify-center"
-                    >
-                      <IoWalletOutline className={`${accentColor}`} size={20} />
-                      <span className="font-semibold text-sm">
-                         ₹{walletBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                      </span>
-                      <IoChevronDown size={14} className={`text-gray-400 ml-1 transition-transform ${walletOpen ? 'rotate-180' : 'rotate-0'}`} />
-                    </button>
-
-                    {walletOpen && (
-                      <div className="absolute top-full right-0 mt-3 w-64 bg-white border border-gray-100 rounded-xl p-3 shadow-xl z-50">
-                        <h3 className="text-gray-800 font-semibold mb-3 border-b border-gray-100 pb-2 text-sm">
-                          Wallet Actions
-                        </h3>
-                        <div className="space-y-1 text-sm">
-                          <button
-                            onClick={() => {
-                              setShowAddFunds(true);
-                              setWalletOpen(false);
-                            }}
-                            className="w-full text-left text-blue-700 font-medium cursor-pointer hover:text-blue-800 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition-all"
-                          >
-                            Add Funds
-                          </button>
-                           <Link
-                            href="/user-profile?tab=transactions"
-                            className="block text-gray-700 font-medium cursor-pointer hover:text-blue-700 p-2 rounded-lg hover:bg-gray-50 transition-all"
-                            onClick={() => setWalletOpen(false)}
-                          >
-                            Transaction History
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </>
-              }
-
-              {/* Mobile Menu Button */}
-              <button
-                onClick={() => setOpen((v) => !v)}
-                className="md:hidden p-2 rounded-lg bg-gray-100 border border-gray-200 text-blue-700 hover:bg-gray-200 transition-all"
-              >
-                {open ? <IoClose size={24} /> : <IoMenu size={24} />}
-              </button>
-            </div>
+          {/* Wallet + Mobile button */}
 
           {/* Mobile Menu */}
           {open && (
             <div className="md:hidden  absolute right-4 top-24 w-[90%] mt-4 bg-white border border-gray-200 rounded-xl p-4 shadow-md">
               <div className="flex flex-col space-y-2">
                 {navLinks.map((link) => (
-                    <Link
-                      key={link.name}
-                      href={link.href}
-                      className={`text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50 ${pathname === link.href ? 'bg-blue-50 text-blue-700 font-semibold' : ''}`}
-                      onClick={() => setOpen(false)}
-                    >
-                      {link.name}
-                    </Link>
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    className={`text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50 ${pathname === link.href ? 'bg-blue-50 text-blue-700 font-semibold' : ''}`}
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
                 ))}
-                
+
                 {token &&
                   <Link
                     href="/user-profile"
@@ -293,7 +233,7 @@ export default function Header() {
       </nav>
 
       {/* Spacer for fixed nav */}
-      <div className="h-[74px] sm:h-[76px]" /> 
+      <div className="h-[74px] sm:h-[76px]" />
 
       {showAddFunds && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
