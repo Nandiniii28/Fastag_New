@@ -8,7 +8,8 @@ import { toast, ToastContainer } from "react-toastify";
 import Swal from "sweetalert2";
 
 // API base URL
-const API_BASE_URL = "http://localhost:5000/api/instantpay";
+// const API_BASE_URL = "http://localhost:5000/api/instantpay";
+const API_BASE_URL = "https://api.fastpaysave.com/api/instantpay";
 
 export default function FastagForm({ categoryKey }) {
     const router = useRouter();

@@ -76,7 +76,7 @@ export default function Footer() {
 
               <ul className="space-y-3 text-gray-600 text-[15px]">
                 {[
-                  { label: "Login", href: "/login" },
+                  // { label: "Login", href: "/login" },
                   { label: "contact us", href: "/contact" },
                   { label: "Privacy Policy", href: "/privacy-policy" },
                   { label: "Terms & Conditions", href: "/terms-and-conditions" },
