@@ -451,6 +451,7 @@ export default function LoginPage() {
         toast.success("Login Successful!");
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
+    localStorage.setItem("reloadHome", "true");
 
         setTimeout(() => {
           router.push("/");
