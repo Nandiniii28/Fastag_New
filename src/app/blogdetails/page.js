@@ -131,10 +131,10 @@ export default function BlogPostPage() {
                         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
 
                         <div className="flex flex-wrap justify-center gap-4 text-sm">
-                            <div className="flex items-center">
+                            {/* <div className="flex items-center">
                                 <FaCalendarAlt className="h-4 w-4 mr-1" />
                                 {new Date(post.created_at).toLocaleDateString()}
-                            </div>
+                            </div> */}
 
                             <div className="flex items-center">
                                 <FaUser className="h-4 w-4 mr-1" /> Admin
