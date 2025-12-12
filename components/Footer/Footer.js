@@ -71,12 +71,11 @@ export default function Footer() {
               <h4 className="text-[18px] font-semibold text-gray-900 mb-4">
                 Services
               </h4>
-              <div className="h-[2px] w-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-6"></div>
+              <div className="h-0.5 w-12 bg-linear-to-r from-blue-500 to-teal-400 rounded-full mb-6"></div>
 
               <ul className="space-y-3 text-gray-600 text-[15px]">
                 {[
                   { label: "Login", href: "/login" },
-                  { label: "Register", href: "/register" },
                   { label: "Privacy Policy", href: "/privacy-policy" },
                   { label: "Terms & Conditions", href: "/terms-and-conditions" },
                 ].map((item, i) => (
