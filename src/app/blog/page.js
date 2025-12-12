@@ -155,8 +155,7 @@ export default function BlogPage() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="bg-[#00186b] hover:bg-[#fa9404] font-bold text-white px-6 my-6 py-2 rounded-full shadow-md transition-all duration-300"
-          >
-            
+          > 
             Get in touch
           </motion.button>
         </Link>
