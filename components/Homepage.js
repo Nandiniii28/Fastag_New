@@ -63,7 +63,7 @@ export default function Homepage() {
     }, []);
 
     return (
-        <section className="relative h-screen md:h-[92vh] w-full overflow-hidden bg-slate-800 text-white">
+        <section className="relative h-screen md:h-auto w-full overflow-hidden bg-slate-800 text-white">
             {/* background slides */}
             <div className="absolute inset-0">
                 {slides.map((slide, i) => (
@@ -80,14 +80,14 @@ export default function Homepage() {
             {/* content */}
             <div className="relative z-10 flex h-full flex-col lg:flex-row items-center px-4 sm:px-6 md:px-10 lg:px-16 pt-16 md:pt-20 lg:gap-12 xl:gap-20">
                 {/* Left content - stacks on mobile */}
-                <div className="w-full lg:w-1/2 lg:max-w-xl xl:max-w-2xl order-2 lg:order-1">
+                <div className="w-full lg:w-[60%] lg:max-w-xl xl:max-w-2xl order-2 lg:order-1 mb-2 md:mb-5">
                     <div key={index} className="animate-slideUpFade">
                         <p className="mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-widest text-white/90">
                             Your Fastag, our precision
                         </p>
 
                         {/* Responsive Heading */}
-                        <h1 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-[50px] leading-tight md:leading-[1.2] font-bold">
+                        <h1 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-3xl lg:text-[42px] xl:text-[40px] leading-tight md:leading-[1.2] font-bold">
                             {slides[index].title}
                         </h1>
 
@@ -109,9 +109,9 @@ export default function Homepage() {
                 </div>
 
                 {/* Right form card - full width on mobile */}
-                <div className="w-full lg:w-1/2 lg:max-w-md order-1 lg:order-2 mx-auto lg:mx-0 mb-8 lg:mb-0">
-                    <div className="bg-white/85 sm:bg-white/90 backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl shadow-2xl border border-white/60">
-                        <div className="max-w-md mx-auto">
+                <div className="w-full max-w-full order-1 lg:order-2 mb-6">
+                    <div className="">
+                        <div className="md:px-0">
                             {/* Tabs */}
                             <div className="flex bg-gradient-to-r from-gray-100/70 to-gray-200/70 rounded-2xl p-1 mb-6 shadow-lg">
                                 <button
@@ -232,9 +232,9 @@ export default function Homepage() {
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                                 </button> */}
 
-                                <p className="text-xs text-center text-gray-500 pt-3 sm:pt-4 opacity-75">
+                                {/* <p className="text-xs text-center text-gray-500 pt-3 sm:pt-4 opacity-75">
                                     🔒 Secure • Powered by Finunique Small Private Limited
-                                </p>
+                                </p> */}
                             </div>
                         </div>
                     </div>
