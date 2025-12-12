@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { FaArrowRight } from "react-icons/fa6";
 import { FaCreditCard, FaRupeeSign, FaBolt } from "react-icons/fa";
 import { MdDirectionsCar, MdSearch } from "react-icons/md";
+import FastagForm from "./FastagForm";
 
 const slides = [
     {
@@ -43,15 +44,15 @@ export default function Homepage() {
     const [activeTab, setActiveTab] = useState('echallan');
     const [fastagNumber, setFastagNumber] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        setIsSearching(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsSearching(false);
-            onSubmit({ type: activeTab, [activeTab === 'echallan' ? 'vehicleNumber' : 'fastagNumber']: activeTab === 'echallan' ? vehicleNumber : fastagNumber });
-        }, 2000);
-    };
+    // const handleSubmit = (e) => {
+    //     e.preventDefault();
+    //     setIsSearching(true);
+    //     // Simulate API call
+    //     setTimeout(() => {
+    //         setIsSearching(false);
+    //         onSubmit({ type: activeTab, [activeTab === 'echallan' ? 'vehicleNumber' : 'fastagNumber']: activeTab === 'echallan' ? vehicleNumber : fastagNumber });
+    //     }, 2000);
+    // };
 
     useEffect(() => {
         const id = setInterval(
@@ -62,7 +63,7 @@ export default function Homepage() {
     }, []);
 
     return (
-        <section className="relative h-screen md:h-[92vh] w-full overflow-hidden bg-slate-800 text-white">
+        <section className="relative h-screen md:h-auto w-full overflow-hidden bg-slate-800 text-white">
             {/* background slides */}
             <div className="absolute inset-0">
                 {slides.map((slide, i) => (
@@ -70,7 +71,7 @@ export default function Homepage() {
                         key={slide.image}
                         className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"
                             }`}
-                        style={{ backgroundImage: `url(${slide.image})` }}
+                        style={{ backgroundImage: `url(${ slide.image })` }}
                     />
                 ))}
                 <div className="absolute inset-0 bg-black/30 sm:bg-black/20" />
@@ -79,14 +80,14 @@ export default function Homepage() {
             {/* content */}
             <div className="relative z-10 flex h-full flex-col lg:flex-row items-center px-4 sm:px-6 md:px-10 lg:px-16 pt-16 md:pt-20 lg:gap-12 xl:gap-20">
                 {/* Left content - stacks on mobile */}
-                <div className="w-full lg:w-1/2 lg:max-w-xl xl:max-w-2xl order-2 lg:order-1">
+                <div className="w-full lg:w-[60%] lg:max-w-xl xl:max-w-2xl order-2 lg:order-1 mb-2 md:mb-5">
                     <div key={index} className="animate-slideUpFade">
                         <p className="mb-3 sm:mb-4 text-xs sm:text-sm uppercase tracking-widest text-white/90">
                             Your Fastag, our precision
                         </p>
 
                         {/* Responsive Heading */}
-                        <h1 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-4xl lg:text-[42px] xl:text-[50px] leading-tight md:leading-[1.2] font-bold">
+                        <h1 className="mb-6 sm:mb-8 md:mb-10 text-2xl sm:text-3xl md:text-3xl lg:text-[42px] xl:text-[40px] leading-tight md:leading-[1.2] font-bold">
                             {slides[index].title}
                         </h1>
 
@@ -108,9 +109,9 @@ export default function Homepage() {
                 </div>
 
                 {/* Right form card - full width on mobile */}
-                <div className="w-full lg:w-1/2 lg:max-w-md order-1 lg:order-2 mx-auto lg:mx-0 mb-8 lg:mb-0">
-                    <div className="bg-white/85 sm:bg-white/90 backdrop-blur-xl p-4 sm:p-6 lg:p-8 rounded-2xl lg:rounded-3xl shadow-2xl border border-white/60">
-                        <div className="max-w-md mx-auto">
+                <div className="w-full max-w-full order-1 lg:order-2 mb-6">
+                    <div className="">
+                        <div className="md:px-0">
                             {/* Tabs */}
                             <div className="flex bg-gradient-to-r from-gray-100/70 to-gray-200/70 rounded-2xl p-1 mb-6 shadow-lg">
                                 <button
@@ -135,11 +136,11 @@ export default function Homepage() {
                                 </button>
                             </div>
 
-                            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+                            <div className="space-y-5 sm:space-y-6">
                                 {/* e-Challan Form */}
                                 {activeTab === 'echallan' && (
                                     <div>
-                                        <label htmlFor="vehicleNo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-3 uppercase tracking-widest">
+                                        {/* <label htmlFor="vehicleNo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-3 uppercase tracking-widest">
                                             Vehicle Registration Number
                                         </label>
                                         <div className="relative">
@@ -160,14 +161,15 @@ export default function Homepage() {
                                         <p className="text-xs text-gray-500 mt-2 flex items-center gap-1">
                                             <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
                                             Real-time data from traffic authorities
-                                        </p>
+                                        </p> */}
+                                        <FastagForm categoryKey={"C31"} />
                                     </div>
                                 )}
 
                                 {/* FASTag Form */}
                                 {activeTab === 'fastag' && (
                                     <div>
-                                        <label htmlFor="fastagNo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-3 uppercase tracking-widest">
+                                        {/* <label htmlFor="fastagNo" className="block text-xs sm:text-sm font-semibold text-gray-700 mb-3 uppercase tracking-widest">
                                             FASTag ID / Wallet Number
                                         </label>
                                         <div className="relative">
@@ -194,12 +196,13 @@ export default function Homepage() {
                                                 <FaBolt className="w-3 h-3 text-green-500" />
                                                 <span>Instant activation</span>
                                             </div>
-                                        </div>
+                                        </div> */}
+                                        <FastagForm categoryKey={"C10"} />
                                     </div>
                                 )}
 
                                 {/* Submit Button */}
-                                <button
+                                {/* <button
                                     type="submit"
                                     disabled={isSearching}
                                     className="w-full group relative overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700 data-[tab=fastag]:from-orange-500 data-[tab=fastag]:to-orange-600 hover:from-blue-700 hover:to-blue-800 data-[tab=fastag]:hover:from-orange-600 data-[tab=fastag]:hover:to-orange-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold py-3.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] focus:outline-none focus:ring-4 focus:ring-blue-500/30 data-[tab=fastag]:focus:ring-orange-500/30"
@@ -226,15 +229,13 @@ export default function Homepage() {
                                             </>
                                         )}
                                     </div>
-
-                                    {/* Gradient shine effect */}
                                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-[100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                                </button>
+                                </button> */}
 
-                                <p className="text-xs text-center text-gray-500 pt-3 sm:pt-4 opacity-75">
+                                {/* <p className="text-xs text-center text-gray-500 pt-3 sm:pt-4 opacity-75">
                                     🔒 Secure • Powered by Finunique Small Private Limited
-                                </p>
-                            </form>
+                                </p> */}
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -440,11 +440,21 @@ export default function FastagForm({ categoryKey }) {
                 setSubmitted(true);
             } else {
                 const errorMessage = data.data?.status || data.message || "Failed to fetch bill details. Please try again.";
-                alert(errorMessage);
+                Swal.fire({
+                    title: "info",
+                    text: errorMessage,
+                    icon: "warning",
+                    confirmButtonText: "ok",
+                })
             }
         } catch (error) {
             console.error("Error fetching bill:", error);
-            alert("Error fetching bill details. Please check your network connection.");
+            Swal.fire({
+                title: "info",
+                text: error.response.data.message || "someting went wrong",
+                icon: "warning",
+                confirmButtonText: "ok",
+            })
         } finally {
             setFetchingBill(false);
         }
@@ -453,9 +463,11 @@ export default function FastagForm({ categoryKey }) {
     const handlePayBill = async () => {
         try {
             if (billAmount < 100) {
-                toast.info("minimum 100 Rs is required")
+                toast.info("minimum amount 100 is required")
                 return
             }
+
+            settoken(localStorage.getItem("token"))
             if (!tokan) {
                 Swal.fire({
                     title: "Verify Required",
@@ -470,7 +482,7 @@ export default function FastagForm({ categoryKey }) {
                     }
                 });
 
-                return; 
+                return;
             }
 
             const biller = providers.find(p => p.billerId == provider);
@@ -492,16 +504,27 @@ export default function FastagForm({ categoryKey }) {
             });
 
             const data = await res.json();
+            console.log(data)
 
             if (data.success) {
                 window.location.href = data.redirectURL; // Auto redirect to gateway
             } else {
-                toast.error(data.message);
+                Swal.fire({
+                    title: "alright!",
+                    text: data.message || "try after some times",
+                    icon: "warning",
+                    confirmButtonText: "Ok",
+                })
             }
 
         } catch (err) {
             console.log(err);
-            toast.error("Something went wrong");
+            Swal.fire({
+                title: "alright!",
+                text: err.response?.data?.message || "try after some time",
+                icon: "warning",
+                confirmButtonText: "Ok",
+            })
         }
     };
 
@@ -747,10 +770,10 @@ export default function FastagForm({ categoryKey }) {
     };
 
     return (
-        <section className="py-5 px-4 md:px-0 max-w-7xl mx-auto">
+        <section className="py-0 px-4 md:px-0 max-w-7xl mx-auto">
             <ToastContainer position="top-center" />
-            <div className="grid md:grid-cols-2">
-                <div className="">
+            <div className="grid md:grid-cols-1">
+                {/* <div className="">
                     <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight pb">
                         Get your <br />
                         <span className="text-[#00186b] ">FASTag Bill </span>
@@ -762,8 +785,8 @@ export default function FastagForm({ categoryKey }) {
                         height={600}
                         alt="FASTag bill payment"
                     />
-                </div>
-                <div className="mt-10 p-6 bg-white rounded-2xl shadow-md h-fit relative">
+                </div> */}
+                <div className=" p-6 bg-white rounded-2xl shadow-md h-fit relative">
                     {loading ? (
                         <div className="flex justify-center items-center h-40">
                             <FaSpinner className="animate-spin text-4xl text-gray-600" />
@@ -889,7 +912,7 @@ export default function FastagForm({ categoryKey }) {
                                     <p className="font-semibold text-sm">{billNumber}</p>
                                 </div> */}
                             </div>
-                            <div className="bg-white p-4 rounded-lg border">
+                            <div className="rounded-lg">
                                 <div className="flex justify-between items-center">
                                     <div>
                                         <p className="font-medium text-gray-500 text-sm">Amount Due</p>
@@ -911,7 +934,7 @@ export default function FastagForm({ categoryKey }) {
 
                                 </div>
                             </div>
-                            <div className="text-xs text-gray-500">
+                            <div className="text-xs text-gray-500 flex justify-between">
                                 <p>Reference ID: <span className="font-mono">{enquiryReferenceId}</span></p>
                                 <p>External Ref: <span className="font-mono">{externalRef}</span></p>
                             </div>

@@ -71,9 +71,9 @@ export default function page() {
 
     const formRef = useRef(null);
 
-  const scrollToForm = () => {
-    formRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+    const scrollToForm = () => {
+        formRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
     return (
         <>
             <section className="w-full bg-white py-12 md:py-16 overflow-hidden">
@@ -154,8 +154,25 @@ export default function page() {
                 </div>
             </section>
 
-            <div ref={formRef}>
-                <FastagForm categoryKey={"C31"}/>
+            <div ref={formRef} className="max-w-6xl mx-auto">
+                <div className="grid md:grid-cols-2 ">
+                    <div className="">
+                        <h2 className="text-3xl md:text-4xl font-bold text-gray-900 leading-tight pb">
+                            Get your <br />
+                            <span className="text-[#00186b] ">echallan Bill </span>
+                        </h2>
+                        <Image
+                            className=""
+                            src="/user/bill.jpg"
+                            width={500}
+                            height={600}
+                            alt="FASTag bill payment"
+                        />
+                    </div>
+                    <div>
+                        <FastagForm categoryKey={"C31"} />
+                    </div>
+                </div>
             </div>
 
             <section className="max-w-7xl mx-auto my-20 px-4 sm:px-6 md:px-8">
