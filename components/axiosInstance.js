@@ -2,8 +2,9 @@ import axios from "axios";
 
 // Create Axios instance
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api", // Replace with your API base URL
-  timeout: 10000,                     // Optional: request timeout
+  baseURL: "http://localhost:5000/api",
+  // baseURL: "https://api.fastpaysave.com//api",
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },

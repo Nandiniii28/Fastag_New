@@ -1084,7 +1084,7 @@ function HistoryCard({ user }) {
                             <p className="text-gray-600 text-sm">All your FASTag and wallet transactions</p>
                         </div>
                         
-                        <div className="flex gap-2">
+                        {/* <div className="flex gap-2">
                             <button
                                 onClick={() => setFilter("all")}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filter === "all" ? "bg-[#0060c9] text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
@@ -1103,7 +1103,7 @@ function HistoryCard({ user }) {
                             >
                                 Credit
                             </button>
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Loading State */}
