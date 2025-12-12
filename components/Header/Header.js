@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { IoWalletOutline, IoMenu, IoClose } from "react-icons/io5";
+// Swapped to Ionicon style for a sleeker look
+import { IoWalletOutline, IoMenu, IoClose, IoChevronDown } from "react-icons/io5"; 
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Swal from "sweetalert2";
@@ -11,50 +12,44 @@ import axiosInstance from "../axiosInstance";
 
 export default function Header() {
   const { user } = useUser();
-  console.log(user)
+  
   const [open, setOpen] = useState(false);
   const [walletOpen, setWalletOpen] = useState(false);
   const [showAddFunds, setShowAddFunds] = useState(false);
   const [amount, setAmount] = useState("");
-  const [method, setMethod] = useState("upi");
+  const [method, setMethod] = useState("upi"); 
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState(null);
-  const [userr, setuser] = useState(null);
-  const [email, setemail] = useState("")
-  const [userid, setuserid] = useState("")
-  const [walletBalance, setwalletBalance] = useState(0)
+  const [email, setemail] = useState("");
+  const [userid, setuserid] = useState("");
+  const [walletBalance, setwalletBalance] = useState(0);
 
   const pathname = usePathname();
 
+  // Unified fetch and setup
   useEffect(() => {
-    const userexist = user
-    const token = localStorage.getItem("token");
-
-    setToken(token);
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
 
     if (user) {
-      setuser(user);
       setemail(user.email || "");
       setuserid(user._id || user.id || "");
+      // Use toLocaleString for clean, currency-formatted balance display
       setwalletBalance(user?.wallet?.balance || 0);
     }
-  }, [user?.email,token]);
+  }, [user]); 
 
   const handleAddFunds = async (e) => {
     e.preventDefault();
 
-    // ✅ Validate amount
-    // if (!amount || Number(amount) < 100) {
-    //   Swal.fire({
-    //     icon: "warning",
-    //     title: "Minimum Amount ₹100",
-    //     text: "Please enter an amount of ₹100 or more.",
-    //   });
-    //   return;
-    // }
-
-    // ✅ Check token
-
+    if (!amount || Number(amount) < 100) {
+      Swal.fire({
+        icon: "warning",
+        title: "Minimum Amount ₹100",
+        text: "Please enter an amount of ₹100 or more.",
+      });
+      return;
+    }
 
     if (!token) {
       Swal.fire({
@@ -62,8 +57,10 @@ export default function Header() {
         title: "Login Required",
         text: "Please login to continue.",
         confirmButtonText: "Go to Login",
-      }).then(() => {
-        window.location.href = "/login";
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/login";
+        }
       });
       return;
     }
@@ -78,10 +75,7 @@ export default function Header() {
       };
 
       const res = await axiosInstance.post("/topup/wallet", payload);
-
-      console.log(res)
-      const { data } = await res;
-      // console.log(data)
+      const { data } = res;
 
       if (!data.success) {
         Swal.fire({
@@ -120,171 +114,178 @@ export default function Header() {
     }
   };
 
+  const navLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'About', href: '/about' },
+    { name: 'FASTag', href: '/fastag' },
+    { name: 'E-Challan', href: '/echallan' },
+  ];
+
+  // Professional color palette: Primary Blue, Accent Gold, Clean Text
+  const primaryColor = 'text-blue-800';
+  const accentColor = 'text-yellow-500';
+
+  const activeLinkClass = `font-semibold ${primaryColor}`;
+  const baseLinkClass = "text-gray-700 hover:text-blue-800 transition-colors font-medium text-base";
+
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-50
-        bg-[#001c38]
-        bg-linear-to-r from-white/10 via-white/5 to-white/10
-        backdrop-blur-2xl
-        border-b border-white/10
-        shadow-[0_8px_30px_rgba(0,0,0,0.35)]"
+        className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-md"
       >
-        <div className="container mx-auto px-24 py-4">
+        <div className="container mx-auto px-6 lg:px-12 py-2 flex md:block justify-between">
           <div className="flex items-center justify-between gap-4">
             {/* Logo */}
-            <Link
-              href="/"
-              className="text-2xl font-bold bg-gradient-to-r from-[#fdc700] to-yellow-500 bg-clip-text text-transparent"
-            >
-              <Image src={"/fastpaysave.png"} alt="fastpaysave" width={100} height={100} className="" />
+            <Link href="/" className="flex items-center gap-3">
+              <Image 
+                src={"/fastpaysave.png"} 
+                alt="fastpaysave" 
+                width={140} 
+                height={30} 
+                className="w-28 h-auto" 
+              />
             </Link>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link
-                href="/"
-                className="text-white hover:text-[#fdc700] transition-colors font-medium"
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="text-white hover:text-[#fdc700] transition-colors font-medium"
-              >
-                About
-              </Link>
-              <Link
-                href="/fastag"
-                className="text-white hover:text-[#fdc700] transition-colors font-medium"
-              >
-                Fastag
-              </Link>
-              <Link
-                href="/echallan"
-                className="text-white hover:text-[#fdc700] transition-colors font-medium"
-              >
-                E-Challan
-              </Link>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`${baseLinkClass} ${pathname === link.href ? activeLinkClass : ''}`}
+                >
+                  {link.name}
+                </Link>
+              ))}
+              
               {token &&
                 <Link
                   href="/user-profile"
-                  className="text-white hover:text-[#fdc700] transition-colors font-medium"
+                  className={`${baseLinkClass} ${pathname.startsWith('/user-profile') ? activeLinkClass : ''}`}
                 >
                   Profile
                 </Link>
               }
+
+              {!token && (
+                <div className="space-x-4 ml-4 flex items-center">
+                  <Link
+                    href="/login"
+                    className="px-5 py-2 rounded-full text-blue-800 border border-blue-100 hover:bg-blue-50 transition-all font-semibold text-sm"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/register"
+                    className="px-5 py-2 rounded-full bg-yellow-450 bg-gradient-to-r from-yellow-400 to-yellow-500 text-white hover:brightness-95 transition-all font-semibold text-sm shadow-md"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
+            </div>
+
+     
+          </div>
+                 {/* Wallet + Mobile button */}
+            <div className="flex items-center gap-4">
               {
-                !token && (
+                token &&
+                <>
+                  {/* Wallet Dropdown - Sleek Button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => setWalletOpen((v) => !v)}
+                      className="flex items-center space-x-2 px-4 py-2 bg-black border border-gray-200 rounded-full text-gray-800 hover:bg-gray-50 transition-all shadow-sm min-w-[140px] justify-center"
+                    >
+                      <IoWalletOutline className={`${accentColor}`} size={20} />
+                      <span className="font-semibold text-sm">
+                         ₹{walletBalance.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      </span>
+                      <IoChevronDown size={14} className={`text-gray-400 ml-1 transition-transform ${walletOpen ? 'rotate-180' : 'rotate-0'}`} />
+                    </button>
+
+                    {walletOpen && (
+                      <div className="absolute top-full right-0 mt-3 w-64 bg-white border border-gray-100 rounded-xl p-3 shadow-xl z-50">
+                        <h3 className="text-gray-800 font-semibold mb-3 border-b border-gray-100 pb-2 text-sm">
+                          Wallet Actions
+                        </h3>
+                        <div className="space-y-1 text-sm">
+                          <button
+                            onClick={() => {
+                              setShowAddFunds(true);
+                              setWalletOpen(false);
+                            }}
+                            className="w-full text-left text-blue-700 font-medium cursor-pointer hover:text-blue-800 p-2 rounded-lg bg-blue-50 hover:bg-blue-100 transition-all"
+                          >
+                            Add Funds
+                          </button>
+                           <Link
+                            href="/user-profile?tab=transactions"
+                            className="block text-gray-700 font-medium cursor-pointer hover:text-blue-700 p-2 rounded-lg hover:bg-gray-50 transition-all"
+                            onClick={() => setWalletOpen(false)}
+                          >
+                            Transaction History
+                          </Link>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </>
+              }
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setOpen((v) => !v)}
+                className="md:hidden p-2 rounded-lg bg-gray-100 border border-gray-200 text-blue-700 hover:bg-gray-200 transition-all"
+              >
+                {open ? <IoClose size={24} /> : <IoMenu size={24} />}
+              </button>
+            </div>
+
+          {/* Mobile Menu */}
+          {open && (
+            <div className="md:hidden  absolute right-4 top-24 w-[90%] mt-4 bg-white border border-gray-200 rounded-xl p-4 shadow-md">
+              <div className="flex flex-col space-y-2">
+                {navLinks.map((link) => (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      className={`text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50 ${pathname === link.href ? 'bg-blue-50 text-blue-700 font-semibold' : ''}`}
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.name}
+                    </Link>
+                ))}
+                
+                {token &&
+                  <Link
+                    href="/user-profile"
+                    className={`text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50 ${pathname.startsWith('/user-profile') ? 'bg-blue-50 text-blue-700 font-semibold' : ''}`}
+                    onClick={() => setOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                }
+
+                {!token && (
                   <>
                     <Link
                       href="/login"
-                      className="text-white hover:text-[#fdc700] transition-colors font-medium"
+                      className="text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50"
+                      onClick={() => setOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="text-white hover:text-[#fdc700] transition-colors font-medium"
+                      className="text-gray-800 font-medium py-2 px-3 rounded-lg hover:bg-blue-50"
+                      onClick={() => setOpen(false)}
                     >
                       Register
                     </Link>
                   </>
-                )
-              }
-            </div>
-
-            {/* Wallet + Mobile button */}
-            {
-              token &&
-              <div className="flex items-center gap-3">
-                {/* Wallet Dropdown */}
-                <div className="relative">
-                  <button
-                    onClick={() => setWalletOpen((v) => !v)}
-                    className="flex items-center space-x-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl text-white hover:bg-white/20 transition-all group"
-                  >
-                    <IoWalletOutline className="text-[#fdc700]" />
-                    <span className="font-semibold">{walletBalance}</span>
-                  </button>
-
-                  {walletOpen && (
-                    <div className="absolute top-full right-0 mt-2 w-64 backdrop-blur-xl bg-white/70 border border-white/20 rounded-3xl p-4 shadow-2xl animate-in slide-in-from-top-2 duration-200">
-                      <h3 className="text-black font-bold mb-4 border-b border-white/20 pb-2">
-                        Wallet
-                      </h3>
-                      <div className="space-y-2 text-sm">
-                        <button
-                          onClick={() => {
-                            setShowAddFunds(true);
-                            setWalletOpen(false);
-                          }}
-                          className="w-full text-left text-black cursor-pointer hover:text-[#fdc700] p-2 rounded-xl hover:bg-white/10 transition-all"
-                        >
-                          Add Funds
-                        </button>
-                        {/* <Link
-                          href="/profile#transactions"
-                          className="block text-black cursor-pointer hover:text-[#fdc700] p-2 rounded-xl hover:bg-white/10 transition-all"
-                          onClick={() => setWalletOpen(false)}
-                        >
-                          Transaction History
-                        </Link> */}
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Mobile Menu Button */}
-                <button
-                  onClick={() => setOpen((v) => !v)}
-                  className="md:hidden p-2 rounded-xl backdrop-blur-sm bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-all"
-                >
-                  {open ? <IoClose size={24} /> : <IoMenu size={24} />}
-                </button>
-              </div>
-            }
-          </div>
-
-          {/* Mobile Menu */}
-          {open && (
-            <div className="md:hidden mt-4 backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl p-6 animate-in slide-in-from-top-4 duration-200">
-              <div className="flex flex-col space-y-4">
-                <Link
-                  href="/"
-                  className="text-white/90 hover:text-[#fdc700] font-medium py-2"
-                  onClick={() => setOpen(false)}
-                >
-                  Home
-                </Link>
-                <Link
-                  href="/about"
-                  className="text-white/90 hover:text-[#fdc700] font-medium py-2"
-                  onClick={() => setOpen(false)}
-                >
-                  About
-                </Link>
-                <Link
-                  href="/fastag"
-                  className="text-white/90 hover:text-[#fdc700] font-medium py-2"
-                  onClick={() => setOpen(false)}
-                >
-                  Fastag
-                </Link>
-                <Link
-                  href="/echallan"
-                  className="text-white/90 hover:text-[#fdc700] font-medium py-2"
-                  onClick={() => setOpen(false)}
-                >
-                  E-Challan
-                </Link>
-                <Link
-                  href="/profile"
-                  className="text-white/90 hover:text-[#fdc700] font-medium py-2"
-                  onClick={() => setOpen(false)}
-                >
-                  Profile
-                </Link>
+                )}
               </div>
             </div>
           )}
@@ -292,67 +293,66 @@ export default function Header() {
       </nav>
 
       {/* Spacer for fixed nav */}
-      <div className="h-20 md:h-24" />
+      <div className="h-[74px] sm:h-[76px]" /> 
 
-      {/* Add Funds Modal */}
       {showAddFunds && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm">
-          <div className="w-full max-w-md rounded-3xl bg-[#021631] border border-white/10 shadow-2xl p-6 relative">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl bg-white border border-gray-100 shadow-2xl p-8 relative">
             <button
               onClick={() => setShowAddFunds(false)}
-              className="absolute top-3 right-3 text-white/60 hover:text-white"
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-700 transition-colors"
             >
-              <IoClose size={22} />
+              <IoClose size={24} />
             </button>
 
-            <h2 className="text-xl font-semibold text-white mb-1">
-              Add Wallet Funds
+            <h2 className="text-2xl font-semibold text-gray-800 mb-1">
+              Top Up Wallet
             </h2>
-            <p className="text-xs text-white/60 mb-4">
-              Recharge your Fastpaysave wallet to pay FASTag tolls and
-              e‑Challans instantly.
+            <p className="text-sm text-gray-500 mb-6">
+              Securely add funds for instant toll and e-Challan payments.
             </p>
 
             <form
-              className="space-y-4"
+              className="space-y-6"
               onSubmit={handleAddFunds}
             >
               <div>
-                <label className="block text-xs text-white/70 mb-1">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Amount (₹)
                 </label>
-                <input
-                  type="text"
-                  value={amount}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (!/^\d*$/.test(val)) return;
-                    if (val.length > 6) return;
-                    setAmount(val);
-                  }}
-                  placeholder="Enter Amount"
-                  className="w-full rounded-2xl bg-white/5 border border-white/15 px-3 py-2 
-             text-sm text-white placeholder:text-white/40 
-             focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
-                />
-
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-lg">₹</span>
+                  <input
+                    type="text"
+                    value={amount}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!/^\d*$/.test(val)) return;
+                      if (val.length > 6) return;
+                      setAmount(val);
+                    }}
+                    placeholder="Minimum ₹100"
+                    className="w-full rounded-2xl bg-gray-50 border border-gray-200 pl-12 pr-4 py-3 text-lg font-semibold text-blue-800 placeholder:text-gray-400 focus:outline-none focus:ring-3 focus:ring-blue-200 transition-colors"
+                  />
+                </div>
               </div>
 
               <div>
-                <label className="block text-xs text-white/70 mb-1">
-                  Payment Method
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Preferred Payment Method
                 </label>
                 <select
-                  className="w-full rounded-2xl bg-white/5 border border-white/15 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
-                  defaultValue="upi"
+                  value={method}
+                  onChange={(e) => setMethod(e.target.value)}
+                  className="w-full rounded-2xl bg-white border border-gray-200 px-4 py-3 text-base text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
                 >
-                  <option value="upi" className="bg-[#021631]">
-                    UPI
+                  <option value="upi" className="bg-white">
+                    UPI (Google Pay, PhonePe, etc.)
                   </option>
-                  <option value="card" className="bg-[#021631]">
+                  <option value="card" className="bg-white">
                     Debit / Credit Card
                   </option>
-                  <option value="netbanking" className="bg-[#021631]">
+                  <option value="netbanking" className="bg-white">
                     Net Banking
                   </option>
                 </select>
@@ -360,12 +360,12 @@ export default function Header() {
 
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full mt-2 rounded-2xl bg-gradient-to-r from-[#fdc700] to-orange-400 text-[#111827] text-sm font-semibold py-2.5 hover:brightness-105 transition-colors"
+                disabled={loading || !amount || Number(amount) < 100}
+                className="w-full mt-4 rounded-full bg-blue-700 text-white text-lg font-semibold py-3 shadow-lg hover:bg-blue-800 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {
-                  loading ? "Adding..." :
-                    "Add Funds"
+                  loading ? "Initiating Payment..." :
+                    `Proceed to Pay ₹${amount || '0'}`
                 }
               </button>
             </form>
