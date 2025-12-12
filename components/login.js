@@ -213,14 +213,14 @@ export default function LoginPage() {
               {/* Email or Phone */}
               <div>
                 <label className="mb-1 block text-sm font-semibold">
-                  Your Email
+                  Phone Number
                 </label>
                 <input
                   type="text"
                   name="emailOrMobile"
                   value={loginForm.emailOrMobile}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder="Enter your phone number"
                   className="w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
                 />
               </div>
@@ -228,24 +228,24 @@ export default function LoginPage() {
               {/* Password */}
               <div className="relative">
                 <label className="mb-1 block text-sm font-semibold">
-                  Password
+                  OTP
                 </label>
                 <input
-                  type={show ? "text" : "password"}
-                  name="password"
-                  value={loginForm.password}
+                  type="number"
+                  name="number"
+                  // value={loginForm.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 pr-10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
+                  placeholder="Enter OTP"
+                  className="w-full rounded-xl border border-white/20 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#fdc700]"
                 />
 
-                <button
+                {/* <button
                   type="button"
                   onClick={() => setShow(!show)}
                   className="absolute right-3 top-10 -translate-y-1/2 text-white/70 hover:text-white"
                 >
                   {show ? <IoEyeOffOutline size={18} /> : <IoEyeOutline size={18} />}
-                </button>
+                </button> */}
               </div>
 
               {/* Submit */}
@@ -257,21 +257,6 @@ export default function LoginPage() {
                 {loading ? "Please wait..." : "Continue"}
               </button>
             </form>
-
-            {/* Terms */}
-            <p className="mt-4 text-center text-xs text-white/70">
-              By continuing you agree to our{" "}
-              <a href="#" className="underline underline-offset-2">privacy policy</a>{" "}
-              and{" "}
-              <a href="#" className="underline underline-offset-2">terms of use</a>
-            </p>
-
-            {/* Register link */}
-            <div className="mt-3 text-right text-sm">
-              <a href="/register" className="text-[#1a73e8] hover:underline">
-                Register
-              </a>
-            </div>
 
           </div>
         </section>
