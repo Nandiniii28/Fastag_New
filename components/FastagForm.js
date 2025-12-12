@@ -440,11 +440,21 @@ export default function FastagForm({ categoryKey }) {
                 setSubmitted(true);
             } else {
                 const errorMessage = data.data?.status || data.message || "Failed to fetch bill details. Please try again.";
-                alert(errorMessage);
+                Swal.fire({
+                    title: "info",
+                    text: errorMessage,
+                    icon: "warning",
+                    confirmButtonText: "ok",
+                })
             }
         } catch (error) {
             console.error("Error fetching bill:", error);
-            alert("Error fetching bill details. Please check your network connection.");
+            Swal.fire({
+                title: "info",
+                text: error.response.data.message || "someting went wrong",
+                icon: "warning",
+                confirmButtonText: "ok",
+            })
         } finally {
             setFetchingBill(false);
         }
@@ -456,6 +466,8 @@ export default function FastagForm({ categoryKey }) {
                 toast.info("minimum 100 Rs is required")
                 return
             }
+
+            settoken(localStorage.getItem("token"))
             if (!tokan) {
                 Swal.fire({
                     title: "Verify Required",
@@ -470,7 +482,7 @@ export default function FastagForm({ categoryKey }) {
                     }
                 });
 
-                return; 
+                return;
             }
 
             const biller = providers.find(p => p.billerId == provider);
@@ -486,22 +498,34 @@ export default function FastagForm({ categoryKey }) {
                     billerId: biller,
                     enquiryReferenceId,
                     inputParameters: inputFields,
+                    type,
                     initChannel,
                     email: "niranjan@7unique.in"
                 })
             });
 
             const data = await res.json();
+            console.log(data)
 
             if (data.success) {
                 window.location.href = data.redirectURL; // Auto redirect to gateway
             } else {
-                toast.error(data.message);
+                Swal.fire({
+                    title: "alright!",
+                    text: data.message || "try after some time",
+                    icon: "warning",
+                    confirmButtonText: "Ohk",
+                })
             }
 
         } catch (err) {
             console.log(err);
-            toast.error("Something went wrong");
+            Swal.fire({
+                title: "alright!",
+                text: err.response?.data?.message || "try after some time",
+                icon: "warning",
+                confirmButtonText: "Ohk",
+            })
         }
     };
 

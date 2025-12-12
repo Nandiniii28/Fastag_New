@@ -23,7 +23,7 @@ export function UserProvider({ children }) {
             setUser(res.data.data);
         } catch (err) {
             console.error("Profile load failed:", err);
-            router.push("/login");
+            // router.push("/login");
         } finally {
             setLoading(false);
         }
