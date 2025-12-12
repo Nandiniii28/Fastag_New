@@ -1,54 +1,136 @@
-import Link from 'next/link'
-import React from 'react'
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
+import { FiMail, FiPhoneCall, FiMapPin, FiChevronRight } from "react-icons/fi";
 
 export default function Footer() {
-    return (
-        <>
-         <footer className="bg-gray-900 text-white py-16 px-24">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
+  return (
+<footer
+  className="relative pt-12 pb-6 overflow-hidden bg-cover bg-center bg-no-repeat"
+  style={{ backgroundImage: "url('/Home/hero.jpg')" }}
+>
+  {/* White Overlay */}
+  <div className="absolute inset-0 bg-white/70 backdrop-blur-[1px]"></div>
+
+      <div className="absolute -top-10 -left-10 w-80 h-80 bg-blue-200/25 blur-[120px] rounded-full"></div>
+      <div className="absolute bottom-0 -right-20 w-96 h-96 bg-teal-200/30 blur-[130px] rounded-full"></div>
+
+      <div className="relative max-w-8xl mx-auto px-6">
+
+        {/* Floating Glass Card */}
+        <div className="backdrop-blur-xl bg-white/60 border border-white/80 shadow-[0_8px_28px_rgba(0,0,0,0.05)] rounded-3xl py-8 px-6 md:px-12 ">
+          
+          <div className="grid md:grid-cols-4 gap-14">
+
+            {/* Logo + Description */}
             <div>
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-12 h-12 bg-linear-to-r from-blue-600 to-teal-500 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold text-lg">F</span>
-                </div>
-                <span className="text-2xl font-bold">FastTag E-Challan</span>
+              <div className="mb-3">
+                  <Link
+              href="/"
+              className="text-2xl font-bold "
+            >
+              <Image src={"/fastpaysave.png"} alt="fastpaysave" width={100} height={100} className="" />
+            </Link>
+
               </div>
-              <p className="text-gray-400 mb-6">India's leading platform for FASTag recharge and e-challan payments.</p>
+
+              <p className="text-gray-600 text-[15.5px] leading-relaxed">
+                Your trusted platform for FASTag recharge & e-challan payments.  
+                Secure • Fast • Seamless service across India.
+              </p>
             </div>
+
+            {/* Quick Links */}
             <div>
-              <h4 className="text-xl font-bold mb-6">Quick Links</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-                <li><Link href="/fastag" className="hover:text-white transition-colors">FASTag</Link></li>
-                <li><Link href="/echallan" className="hover:text-white transition-colors">E-Challan</Link></li>
-                {/* <li><Link href="/profile" className="hover:text-white transition-colors">Profile</Link></li> */}
+              <h4 className="text-[18px] font-semibold text-gray-900 mb-4">
+                Quick Links
+              </h4>
+              <div className="h-[2px] w-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-6"></div>
+
+              <ul className="space-y-3 text-gray-600 text-[15px]">
+                {[
+                  { label: "Home", href: "/" },
+                  { label: "FASTag", href: "/fastag" },
+                  { label: "E-Challan", href: "/echallan" },
+                ].map((item, i) => (
+                  <li key={i}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-2 group hover:text-gray-900 transition-all"
+                    >
+                      <FiChevronRight className="text-blue-500 group-hover:translate-x-1 transition duration-200" />
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
+
+            {/* Services */}
             <div>
-              <h4 className="text-xl font-bold mb-6">Services</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href="/login" className="hover:text-white transition-colors">Login</Link></li>
-                <li><Link href="/register" className="hover:text-white transition-colors">Register</Link></li>
-                <li><Link href="/praivacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                <li><Link href="/terms-and-conditions" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
+              <h4 className="text-[18px] font-semibold text-gray-900 mb-4">
+                Services
+              </h4>
+              <div className="h-[2px] w-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-6"></div>
+
+              <ul className="space-y-3 text-gray-600 text-[15px]">
+                {[
+                  { label: "Login", href: "/login" },
+                  { label: "Register", href: "/register" },
+                  { label: "Privacy Policy", href: "/privacy-policy" },
+                  { label: "Terms & Conditions", href: "/terms-and-conditions" },
+                ].map((item, i) => (
+                  <li key={i}>
+                    <Link
+                      href={item.href}
+                      className="flex items-center gap-2 group hover:text-gray-900 transition-all"
+                    >
+                      <FiChevronRight className="text-blue-500 group-hover:translate-x-1 transition duration-200" />
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
+
+            {/* Contact */}
             <div>
-              <h4 className="text-xl font-bold mb-6">Contact</h4>
-              <div className="space-y-3 text-gray-400">
-                <p>support@7unique.in</p>
-                <p>0141-4511098</p>
-                <p>Plot No 97, Dakshinpuri - I, Shrikishan, Sanganer, Jagatpura, Jaipur, Rajasthan, India - 302017</p>
+              <h4 className="text-[18px] font-semibold text-gray-900 mb-4">
+                Contact
+              </h4>
+              <div className="h-[2px] w-12 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full mb-6"></div>
+
+              <div className="space-y-4 text-gray-600 text-[15px]">
+
+                <p className="flex items-start gap-3 hover:text-gray-900 transition">
+                  <FiMail className="text-blue-500 text-xl mt-1" />
+                  support@7unique.in
+                </p>
+
+                <p className="flex items-start gap-3 hover:text-gray-900 transition">
+                  <FiPhoneCall className="text-blue-500 text-xl mt-1" />
+                  0141-4511098
+                </p>
+
+                <p className="flex items-start gap-3 leading-relaxed">
+                  <FiMapPin className="text-blue-500 text-xl mt-1" />
+                  Plot No 97, Dakshinpuri - I, Shrikishan,  
+                  Sanganer, Jagatpura, Jaipur, Rajasthan 302017, India
+                </p>
+
               </div>
             </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Powered by Finunique Small Private Limited. All rights reserved.</p>
           </div>
         </div>
-      </footer>
-            
-        </>
-    )
+
+        {/* Bottom Divider */}
+        <div className="mt-6 text-center">
+          <p className="text-sm ">
+            © 2025 Finunique Small Private Limited. All rights reserved.
+          </p>
+        </div>
+
+      </div>
+    </footer>
+  );
 }

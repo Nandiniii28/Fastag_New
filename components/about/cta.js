@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function CTASectionCombined() {
   return (
-    <section className="relative flex items-center justify-center text-white my-4">
+    <section className="relative flex items-center justify-center text-white mt-4">
       <Image
         src="/user/car4.jpg"
         alt="Background"
