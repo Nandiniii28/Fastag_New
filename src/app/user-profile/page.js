@@ -11,7 +11,7 @@
 // import { useUser } from "./context";
 
 // export default function Page() {
-    
+
 //     const { user, loading, setUser } = useUser();
 //     console.log("user = ",user);
 //     const [active, setActive] = useState("profile");
@@ -208,7 +208,7 @@
 //                 // Update user in context/state
 //                 setUser(response.data.updated);
 //                 setIsEditing(false);
-                
+
 //                 // Clear success message after 3 seconds
 //                 setTimeout(() => {
 //                     setSuccess("");
@@ -301,7 +301,7 @@
 //                         // Edit Mode
 //                         <form onSubmit={handleSubmit} className="space-y-6">
 //                             <h2 className="text-xl font-medium text-[#0060c9]">Edit Profile</h2>
-                            
+
 //                             {/* Success Message */}
 //                             {success && (
 //                                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
@@ -586,7 +586,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "./context";
 
 export default function Page() {
-    
+
     const { user, loading, setUser } = useUser();
     const [active, setActive] = useState("profile");
     const router = useRouter();
@@ -625,7 +625,7 @@ export default function Page() {
     const sections = [
         { id: "profile", component: <ProfileCard user={user} setUser={setUser} /> },
         { id: "history", component: <HistoryCard user={user} /> },
-        { id: "offers", component: <OffersCard /> },
+        // { id: "offers", component: <OffersCard /> },
     ];
 
     return (
@@ -648,7 +648,8 @@ export default function Page() {
                     <p className="text-[#0060c9] text-xs pb-2">● Active</p>
                 </div>
                 <div className="flex justify-between items-center flex-col">
-                    {["profile", "history", "offers"].map((tab) => (
+                    {/* {["profile", "history", "offers"].map((tab) => ( */}
+                    {["profile", "history",].map((tab) => (
                         <button
                             key={tab}
                             onClick={() => setActive(tab)}
@@ -778,7 +779,7 @@ function ProfileCard({ user, setUser }) {
                 setSuccess("Profile updated successfully!");
                 setUser(response.data.updated);
                 setIsEditing(false);
-                
+
                 setTimeout(() => {
                     setSuccess("");
                 }, 3000);
@@ -858,7 +859,7 @@ function ProfileCard({ user, setUser }) {
                     ) : (
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <h2 className="text-xl font-medium text-[#0060c9]">Edit Profile</h2>
-                            
+
                             {success && (
                                 <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
                                     <p className="text-green-600 text-sm">{success}</p>
@@ -996,7 +997,7 @@ function HistoryCard({ user }) {
             setLoading(true);
             setError("");
             const response = await axiosInstance.get("/topup/wallet/report");
-            
+
             if (response.data.success) {
                 setTransactions(response.data.data || []);
             } else {
@@ -1083,7 +1084,7 @@ function HistoryCard({ user }) {
                             <h2 className="text-xl font-bold text-[#0060c9]">Transaction History</h2>
                             <p className="text-gray-600 text-sm">All your FASTag and wallet transactions</p>
                         </div>
-                        
+
                         {/* <div className="flex gap-2">
                             <button
                                 onClick={() => setFilter("all")}
@@ -1144,8 +1145,8 @@ function HistoryCard({ user }) {
                             {filteredTransactions.map((transaction) => {
                                 const statusInfo = getStatusInfo(transaction.status);
                                 return (
-                                    <div 
-                                        key={transaction._id} 
+                                    <div
+                                        key={transaction._id}
                                         className="border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow"
                                     >
                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -1172,7 +1173,7 @@ function HistoryCard({ user }) {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+
                                                 {transaction.description && (
                                                     <p className="text-sm text-gray-600 mt-2 ml-13">
                                                         {transaction.description}

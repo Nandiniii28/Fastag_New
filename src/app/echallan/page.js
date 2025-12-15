@@ -253,9 +253,9 @@ export default function page() {
                         },
                         {
                             icon: "/Home/wallet.png",
-                            title: "Smart Wallet",
+                            title: "Smart Payment",
                             description:
-                                "Maintain a single wallet for tolls and challans, with detailed transaction history and alerts.",
+                                "Maintain a Smart Payment for tolls and challans, with detailed transaction history.",
                         },
                         {
                             icon: "/Home/trip-analytics.png",
@@ -290,10 +290,9 @@ export default function page() {
             <FAQSection
                 title="e‑Challan"
                 subtitle="Frequently Asked Questions"
-                imageSrc="/user/echallan-faq.png"
+                imageSrc="/user/faq.png"
                 faqs={echallanFaqs}
             />
-
             <CTASectionCombined />
         </>
     )
