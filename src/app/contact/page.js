@@ -462,7 +462,7 @@
 //     if (errors[name]) {
 //       setErrors((prev) => ({ ...prev, [name]: "" }));
 //     }
-    
+
 //     // Clear API error when user makes any change
 //     if (apiError) {
 //       setApiError("");
@@ -537,7 +537,7 @@
 //       if (response.data.success) {
 //         // Show success modal
 //         setShowThankYouModal(true);
-        
+
 //         // Reset form
 //         setFormData({
 //           fullName: "",
@@ -551,13 +551,13 @@
 //       }
 //     } catch (error) {
 //       console.error("Error submitting form:", error);
-      
+
 //       // Handle specific error cases
 //       if (error.response) {
 //         // The request was made and the server responded with a status code
 //         // that falls out of the range of 2xx
 //         const status = error.response.status;
-        
+
 //         if (status === 400) {
 //           // Validation errors from server
 //           const serverErrors = error.response.data?.errors;
@@ -940,7 +940,7 @@ export default function Contact() {
     if (name === "mobile") {
       // Remove any non-digit characters
       processedValue = value.replace(/\D/g, '');
-      
+
       // If first character is 0-5, remove it
       if (processedValue.length > 0) {
         const firstChar = processedValue.charAt(0);
@@ -948,7 +948,7 @@ export default function Contact() {
           processedValue = processedValue.substring(1);
         }
       }
-      
+
       // Limit to 10 digits
       processedValue = processedValue.slice(0, 10);
     }
@@ -962,7 +962,7 @@ export default function Contact() {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
-    
+
     // Clear API error when user makes any change
     if (apiError) {
       setApiError("");
@@ -973,7 +973,7 @@ export default function Contact() {
   const handleBlur = (e) => {
     const { name } = e.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
-    
+
     // Validate the field
     validateField(name, formData[name]);
   };
@@ -981,7 +981,7 @@ export default function Contact() {
   // Validate individual field
   const validateField = (fieldName, value) => {
     let error = "";
-    
+
     switch (fieldName) {
       case "fullName":
         if (!value.trim()) {
@@ -994,7 +994,7 @@ export default function Contact() {
           error = "Name must be less than 50 characters";
         }
         break;
-        
+
       case "email":
         if (!value.trim()) {
           error = "Please fill this field";
@@ -1002,7 +1002,7 @@ export default function Contact() {
           error = "Please enter a valid email address";
         }
         break;
-        
+
       case "mobile":
         if (!value.trim()) {
           error = "Please fill this field";
@@ -1014,7 +1014,7 @@ export default function Contact() {
           error = "Mobile number must start with 6, 7, 8, or 9";
         }
         break;
-        
+
       case "message":
         if (!value.trim()) {
           error = "Please fill this field";
@@ -1024,14 +1024,14 @@ export default function Contact() {
           error = "Message must be less than 500 characters";
         }
         break;
-        
+
       case "agreedToTerms":
         if (!value) {
           error = "You must agree to the terms";
         }
         break;
     }
-    
+
     setErrors((prev) => ({ ...prev, [fieldName]: error }));
     return !error;
   };
@@ -1089,7 +1089,7 @@ export default function Contact() {
       if (response.data.success) {
         // Show success modal
         setShowThankYouModal(true);
-        
+
         // Reset form
         setFormData({
           fullName: "",
@@ -1098,7 +1098,7 @@ export default function Contact() {
           message: "",
           agreedToTerms: false,
         });
-        
+
         // Reset touched state
         setTouched({
           fullName: false,
@@ -1112,11 +1112,11 @@ export default function Contact() {
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      
+
       // Handle specific error cases
       if (error.response) {
         const status = error.response.status;
-        
+
         if (status === 400) {
           const serverErrors = error.response.data?.errors;
           if (serverErrors) {
@@ -1198,7 +1198,7 @@ export default function Contact() {
                   <div>
                     <div className="font-bold text-lg md:text-xl text-[#115D8E] mb-1">Visit us</div>
                     <div className="text-gray-600 text-base md:text-lg leading-relaxed">
-                      Office No. 101/2, 'Vakratunda Corporate Park Premises Co-operative Society Limited, Off. Aarey Road, Goregaon (East), Mumbai - 400063
+                      Plot No 97, Dakshinpuri - I, Shrikishan, Sanganer, Jagatpura, Jaipur, Rajasthan 302017, India
                     </div>
                   </div>
                 </div>
@@ -1212,7 +1212,7 @@ export default function Contact() {
                 />
               </div>
             </div>
-            
+
             {/* Form Card */}
             <div className="w-full lg:max-w-2xl bg-white rounded-3xl  border border-[#ff6f00]/30 p-10 md:px-12 transform transition-all duration-500 hover:scale-[1.02] ">
               <div className=" mb-6">
@@ -1241,11 +1241,10 @@ export default function Contact() {
                     type="text"
                     name="fullName"
                     placeholder="Enter your full name"
-                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${
-                      errors.fullName && touched.fullName
+                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${errors.fullName && touched.fullName
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-[#115D8E]/50 focus:border-[#115D8E] focus:ring-[#115D8E]/20"
-                    }`}
+                      }`}
                     value={formData.fullName}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1268,11 +1267,10 @@ export default function Contact() {
                     type="email"
                     name="email"
                     placeholder="Enter your business email"
-                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${
-                      errors.email && touched.email
+                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${errors.email && touched.email
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-[#115D8E]/50 focus:border-[#115D8E] focus:ring-[#115D8E]/20"
-                    }`}
+                      }`}
                     value={formData.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1294,11 +1292,10 @@ export default function Contact() {
                     type="tel"
                     name="mobile"
                     placeholder="Enter 10-digit mobile number"
-                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${
-                      errors.mobile && touched.mobile
+                    className={`w-full border-2 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${errors.mobile && touched.mobile
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-[#115D8E]/50 focus:border-[#115D8E] focus:ring-[#115D8E]/20"
-                    }`}
+                      }`}
                     value={formData.mobile}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1326,11 +1323,10 @@ export default function Contact() {
                     name="message"
                     placeholder="Tell us about your project or inquiry..."
                     rows={4}
-                    className={`w-full border-2 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${
-                      errors.message && touched.message
+                    className={`w-full border-2 rounded-xl px-4 py-3 resize-none focus:outline-none focus:ring-2 transition-all duration-300 shadow-sm hover:shadow-md ${errors.message && touched.message
                         ? "border-red-500 focus:border-red-500 focus:ring-red-500/20"
                         : "border-[#115D8E]/50 focus:border-[#115D8E] focus:ring-[#115D8E]/20"
-                    }`}
+                      }`}
                     value={formData.message}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -1354,11 +1350,10 @@ export default function Contact() {
                     type="checkbox"
                     id="terms"
                     name="agreedToTerms"
-                    className={`mt-1 w-5 h-5 rounded focus:ring-2 ${
-                      errors.agreedToTerms && touched.agreedToTerms
+                    className={`mt-1 w-5 h-5 rounded focus:ring-2 ${errors.agreedToTerms && touched.agreedToTerms
                         ? "accent-red-500 focus:ring-red-500/30"
                         : "accent-[#ff6f00] focus:ring-[#ff6f00]/30"
-                    }`}
+                      }`}
                     checked={formData.agreedToTerms}
                     onChange={handleChange}
                     onBlur={handleBlur}
