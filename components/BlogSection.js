@@ -184,7 +184,7 @@ export default function BlogsSection() {
                   <div className="overflow-hidden relative h-56">
                     <Image
                       // src={getImageUrl(blog.thumbnail || blog.thumbnailUrl)}
-                      src={blog.thumbnailUrl}
+                      src={blog?.thumbnailUrl}
                       alt={blog.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"
